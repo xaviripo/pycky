@@ -1,5 +1,5 @@
-from cases import case
-from checks import *
+from pycky.cases import case
+from pycky.checks import *
 
 
 @case(2, 2)
