@@ -10,7 +10,7 @@ def case(*args, **kwargs):
                     checklist.inspectable.__name__,
                     _repr_args_kwargs(*args, **kwargs),
                     check.describe(),
-                    actual,
+                    repr(actual),
                 )
         return checklist.inspectable
     return inner
