@@ -1,5 +1,9 @@
 from itertools import chain
 
+from .modifiers.deferrable import deferrable
+
+
+@deferrable
 def case(*args, **kwargs):
     """Decorates a given checklist in order to run its checks."""
     def inner(checklist):
@@ -14,6 +18,7 @@ def case(*args, **kwargs):
                 )
         return checklist.inspectable
     return inner
+
 
 def _repr_args_kwargs(*args, **kwargs):
     """Returns a comma-separated string with the args and kwargs given."""

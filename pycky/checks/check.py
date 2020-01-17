@@ -1,5 +1,8 @@
 import abc
 
+from ..modifiers.deferrable import deferrable
+
+
 class Checklist:
     """
     A checklist is the object that collects the checks to make against a
@@ -47,6 +50,7 @@ class Check(abc.ABC):
     @classmethod
     def decorator(cls):
         """Given a check type, makes and returns a decorator out of it."""
+        @deferrable
         def decorator(*args, **kwargs):
             def inner(checklist_or_inspectable):
                 if isinstance(checklist_or_inspectable, Checklist):
