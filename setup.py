@@ -9,5 +9,13 @@ setup(
     author_email='xaviripo97@gmail.com',
     license='MIT',
     packages=['pycky'],
+    install_requires=[
+        'click',
+    ],
+    entry_points={
+        'console_scripts': [
+            'pycky=bin.pycky:main',
+        ],
+    },
     zip_safe=False
 )
