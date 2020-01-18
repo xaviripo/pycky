@@ -5,6 +5,8 @@ from .modifiers.deferrable import deferrable
 # Import PYCKY global
 from .glb import PYCKY
 
+from .test import Test
+
 
 @deferrable
 def case(*args, **kwargs):
@@ -12,7 +14,7 @@ def case(*args, **kwargs):
     def inner(checklist):
         # Only save the tests if we are actually testing
         if PYCKY.testing:
-            def test():
+            def execute():
                 actual = checklist.inspectable(*args, **kwargs)
                 for check in checklist.checklist:
                     if not check.do(actual):
@@ -22,7 +24,10 @@ def case(*args, **kwargs):
                             check.describe(),
                             repr(actual),
                         ))
-            PYCKY.tests.append(test)
+            PYCKY.tests.append(Test(
+                execute,
+                checklist.inspectable
+            ))
         return checklist.inspectable
     return inner
 
