@@ -11,7 +11,8 @@ def case(*args, **kwargs):
     """Decorates a given checklist in order to run its checks."""
     def inner(checklist):
         # Only save the tests if we are actually testing
-        if PYCKY.testing:
+        if PYCKY.testing and \
+        (PYCKY.follow_imports or checklist.inspectable.__module__ in PYCKY.modules):
             arguments = Arguments(args, kwargs)
             def execute():
                 actual = arguments.apply(checklist.inspectable)

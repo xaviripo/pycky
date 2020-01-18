@@ -1,6 +1,7 @@
 from pycky.cases import case
 from pycky.checks import *
 
+import demodep
 
 @case(2, 2)
 @isGreaterThan(3)
@@ -11,7 +12,7 @@ def addition(a, b):
 
 
 @case(1, 2, 3)
-@equals(6)
+@equals(7)
 
 @case(*(2*x for x in range(10)))
 @isGreaterThan(sum(x for x in range(10)))
