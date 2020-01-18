@@ -1,8 +1,6 @@
 from pycky.cases import case
 from pycky.checks import *
 
-import demodep
-
 @case(2, 2)
 @isGreaterThan(3)
 @equals(4)
