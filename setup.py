@@ -11,6 +11,7 @@ setup(
     packages=['pycky'],
     install_requires=[
         'click',
+        'colorama',
     ],
     entry_points={
         'console_scripts': [
