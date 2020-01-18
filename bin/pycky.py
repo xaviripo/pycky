@@ -4,13 +4,23 @@ import click
 
 import pycky
 
+from pycky.printers import BasicPrinter
+
 @click.command()
 @click.argument('files', nargs=-1)
-def main(files):
+@click.option('-p', '--printer',
+    default='BasicPrinter',
+    help='Printer for the results of the tests.')
+def main(files, printer):
+
+    PYCKY = pycky.glb.PYCKY
 
     # As we will run the imported code from Pycky, we'll be testing it.
     # See /pycky/glb/__init__.py for more info.
-    pycky.glb.PYCKY.testing = True
+    PYCKY.testing = True
+
+    printers = import_module('pycky.printers')
+    PYCKY.printer = getattr(printers, printer)()
 
     # First import each given file as a module. This will define the decorated
     # functions and thus "run" their decorators. These will load the tests into

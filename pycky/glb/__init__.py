@@ -14,3 +14,6 @@ PYCKY.tests = []
 # future an option from running "live" tests when executing the code itself
 # might be added.
 PYCKY.testing = False
+
+# Object in charge of managing the output of the test runs.
+PYCKY.printer = None

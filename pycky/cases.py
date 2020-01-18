@@ -1,14 +1,9 @@
-from itertools import chain
-
 from .modifiers.deferrable import deferrable
-
+from .arguments import Arguments
 # Import PYCKY global
 from .glb import PYCKY
-
 from .test import Test
-from .printer import ColorfulPrinter
-
-printer = ColorfulPrinter()
+from .printers import BasicPrinter
 
 
 @deferrable
@@ -17,27 +12,21 @@ def case(*args, **kwargs):
     def inner(checklist):
         # Only save the tests if we are actually testing
         if PYCKY.testing:
+            arguments = Arguments(args, kwargs)
             def execute():
-                actual = checklist.inspectable(*args, **kwargs)
+                actual = arguments.apply(checklist.inspectable)
                 for check in checklist.checklist:
-                    message = printer.success if check.do(actual) else printer.failure
-                    print(message.format(
-                        inspectable=checklist.inspectable.__name__,
-                        arguments=_repr_args_kwargs(*args, **kwargs),
-                        check=check.describe(),
-                        actual=repr(actual),
-                    ))
+                    (PYCKY.printer.success
+                    if check.do(actual)
+                    else PYCKY.printer.failure)(
+                        inspected=checklist.inspectable,
+                        arguments=arguments,
+                        check=check,
+                        actual=actual,
+                    )
             PYCKY.tests.append(Test(
                 execute,
                 checklist.inspectable
             ))
         return checklist.inspectable
     return inner
-
-
-def _repr_args_kwargs(*args, **kwargs):
-    """Returns a comma-separated string with the args and kwargs given."""
-    return ", ".join(chain(
-        (repr(arg) for arg in args),
-        ("{}={}".format(key, repr(value)) for key, value in kwargs.items())
-    ))
