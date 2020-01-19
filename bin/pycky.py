@@ -4,12 +4,10 @@ import click
 
 import pycky
 
-from pycky.printers import BasicPrinter
-
 @click.command()
 @click.argument('scopes', nargs=-1)
 @click.option('-p', '--printer',
-    default='BasicPrinter',
+    default='basic',
     show_default=True,
     help='Printer used to output the results of the tests.')
 @click.option('-f', '--follow-imports',

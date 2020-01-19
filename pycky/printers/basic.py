@@ -29,22 +29,22 @@ class BasicPrinter(Printer):
         ))
 
 
-class ColorfulPrinter(BasicPrinter):
+class PrettyPrinter(BasicPrinter):
 
     def __init__(self):
 
         self._success = Fore.GREEN + '\u2714 ' \
-            + ColorfulPrinter._bold('{module}') + ': Expected ' \
-            + ColorfulPrinter._bold('{inspected}({arguments})') + ' to ' \
-            + ColorfulPrinter._bold('{check}') + ', correctly got ' \
-            + ColorfulPrinter._bold('{actual}') + '.' \
+            + PrettyPrinter._bold('{module}') + ': Expected ' \
+            + PrettyPrinter._bold('{inspected}({arguments})') + ' to ' \
+            + PrettyPrinter._bold('{check}') + ', correctly got ' \
+            + PrettyPrinter._bold('{actual}') + '.' \
             + Style.RESET_ALL
 
         self._failure = Back.RED + '\u2718 ' \
-            + ColorfulPrinter._bold('{module}') + ': Expected ' \
-            + ColorfulPrinter._bold('{inspected}({arguments})') + ' to ' \
-            + ColorfulPrinter._bold('{check}') + ', got ' \
-            + ColorfulPrinter._bold('{actual}') + ' instead.' \
+            + PrettyPrinter._bold('{module}') + ': Expected ' \
+            + PrettyPrinter._bold('{inspected}({arguments})') + ' to ' \
+            + PrettyPrinter._bold('{check}') + ', got ' \
+            + PrettyPrinter._bold('{actual}') + ' instead.' \
             + Style.RESET_ALL
 
     @staticmethod

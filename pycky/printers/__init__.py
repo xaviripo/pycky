@@ -1,8 +1,12 @@
 from .basic import *
 
+basic = BasicPrinter
+pretty = PrettyPrinter
+exception = ExceptionPrinter
+
 __all__ = [
     "Printer",
-    "BasicPrinter",
-    "ColorfulPrinter",
-    "ExceptionPrinter",
+    "basic",
+    "pretty",
+    "exception",
 ]
