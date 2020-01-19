@@ -10,7 +10,7 @@ PYCKY = Empty()
 PYCKY.tests = []
 
 # List of modules passed to the Pycky script
-PYCKY.modules = []
+PYCKY.modules = {}
 
 # Whether the code is being run for testing or not.
 # As of right now this is only True when running the pycky binary, but in the
