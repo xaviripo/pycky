@@ -1,4 +1,4 @@
-from importlib import import_module
+from importlib import import_module, reload
 
 import click
 
@@ -36,7 +36,7 @@ def main(scopes, printer, follow_imports):
 
     PYCKY.modules = _process_scopes(scopes)
 
-    PYCKY.printer = getattr(pycky.printers, printer)()
+    PYCKY.printer = _process_printer(printer)
 
     PYCKY.follow_imports = follow_imports
 
@@ -65,6 +65,19 @@ def _process_scopes(scopes):
         modules[module].add(inspectable)
 
     return modules
+
+def _process_printer(printer):
+    """Given the passed string, obtain a printer instance"""
+
+    if ':' in printer:
+        module_name, printer_class = printer.split(':')
+        module = import_module(module_name)
+    else:
+        module = pycky.printers
+        printer_class = printer
+
+    return getattr(module, printer_class)()
+
 
 def _obtain_tests():
     """Imports the modules to extract the tests from in an isolated manner."""
