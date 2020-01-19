@@ -40,8 +40,7 @@ def main(scopes, printer, follow_imports):
 
     PYCKY.modules = _process_scopes(scopes)
 
-    printers = import_module('pycky.printers')
-    PYCKY.printer = getattr(printers, printer)()
+    PYCKY.printer = getattr(pycky.printers, printer)()
 
     PYCKY.follow_imports = follow_imports
 

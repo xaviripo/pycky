@@ -4,6 +4,11 @@
 # trying to import it from the bin/pycky script.
 from .glb import *
 
+from . import cases
+from . import checks
+from . import modifiers
+from . import printers
+
 __all__ = [
     "cases",
     "checks",
