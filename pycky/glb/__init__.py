@@ -12,12 +12,6 @@ PYCKY.tests = []
 # List of modules passed to the Pycky script
 PYCKY.modules = {}
 
-# Whether the code is being run for testing or not.
-# As of right now this is only True when running the pycky binary, but in the
-# future an option from running "live" tests when executing the code itself
-# might be added.
-PYCKY.testing = False
-
 # Object in charge of managing the output of the test runs.
 PYCKY.printer = None
 

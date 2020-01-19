@@ -43,8 +43,19 @@ def main(scopes, printer, follow_imports):
     _obtain_tests()
 
     # Now, try to run all the tests.
-    for test in PYCKY.tests:
-        test(PYCKY.printer)
+    for checklist in PYCKY.tests:
+        module_name = checklist.inspectable.__module__
+        inspected_name = checklist.inspectable.__name__
+
+        # Should this module be tested?
+        test_this_module = PYCKY.follow_imports or module_name in PYCKY.modules
+
+        # Should this inspectable be tested?
+        test_this_inspectable = '*' in PYCKY.modules[module_name] or \
+            inspected_name in PYCKY.modules[module_name]
+
+        if test_this_module and test_this_inspectable:
+            checklist(PYCKY.printer)
 
 def _process_scopes(scopes):
     """Given a list of scopes, returns a dictionary associating to each scope
@@ -84,16 +95,8 @@ def _obtain_tests():
 
     PYCKY = pycky.glb.PYCKY
 
-    # As we will run the imported code from Pycky, we'll be testing it.
-    # See /pycky/glb/__init__.py for more info.
-    PYCKY.testing = True
-
     # First import each given file as a module. This will define the decorated
     # functions and thus "run" their decorators. These will load the tests into
     # the PYCKY global inside the pycky.glb package.
     for module in PYCKY.modules:
         import_module(module)
-
-    # Disable the testing mode, so that we don't accidentally run tests on
-    # other modules we might import.
-    PYCKY.testing = False
