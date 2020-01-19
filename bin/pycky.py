@@ -44,7 +44,7 @@ def main(scopes, printer, follow_imports):
 
     # Now, try to run all the tests.
     for test in PYCKY.tests:
-        test()
+        test(PYCKY.printer)
 
 def _process_scopes(scopes):
     """Given a list of scopes, returns a dictionary associating to each scope

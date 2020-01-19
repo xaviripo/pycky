@@ -18,6 +18,9 @@ class Checklist:
         self.inspectable = inspectable
         self.checklist = list(checklist)
 
+        # object of type Arguments to run the test with
+        self.arguments = None
+
     def add_check(self, check):
         """Adds a new check to the checklist to make against a certain case.
 
@@ -26,6 +29,16 @@ class Checklist:
         inside-out instead of top-bottom.
         """
         self.checklist.insert(0, check)
+
+    def __call__(self, printer):
+        actual = self.arguments.apply(self.inspectable)
+        for check in self.checklist:
+            (printer.success if check.do(actual) else printer.failure)(
+                inspected=self.inspectable,
+                arguments=self.arguments,
+                check=check,
+                actual=actual,
+            )
 
 
 class Check(abc.ABC):

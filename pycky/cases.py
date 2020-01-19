@@ -2,7 +2,6 @@ from .modifiers.deferrable import deferrable
 from .arguments import Arguments
 # Import PYCKY global
 from .glb import PYCKY
-from .test import Test
 from .printers import BasicPrinter
 
 
@@ -15,21 +14,7 @@ def case(*args, **kwargs):
         (PYCKY.follow_imports or checklist.inspectable.__module__ in PYCKY.modules) and \
         (checklist.inspectable.__name__ in PYCKY.modules[checklist.inspectable.__module__] or \
         '*' in PYCKY.modules[checklist.inspectable.__module__]):
-            arguments = Arguments(args, kwargs)
-            def execute():
-                actual = arguments.apply(checklist.inspectable)
-                for check in checklist.checklist:
-                    (PYCKY.printer.success
-                    if check.do(actual)
-                    else PYCKY.printer.failure)(
-                        inspected=checklist.inspectable,
-                        arguments=arguments,
-                        check=check,
-                        actual=actual,
-                    )
-            PYCKY.tests.append(Test(
-                execute,
-                checklist.inspectable
-            ))
+            checklist.arguments = Arguments(args, kwargs)
+            PYCKY.tests.append(checklist)
         return checklist.inspectable
     return inner
