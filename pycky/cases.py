@@ -12,7 +12,9 @@ def case(*args, **kwargs):
     def inner(checklist):
         # Only save the tests if we are actually testing
         if PYCKY.testing and \
-        (PYCKY.follow_imports or checklist.inspectable.__module__ in PYCKY.modules):
+        (PYCKY.follow_imports or checklist.inspectable.__module__ in PYCKY.modules) and \
+        (checklist.inspectable.__name__ in PYCKY.modules[checklist.inspectable.__module__] or \
+        '*' in PYCKY.modules[checklist.inspectable.__module__]):
             arguments = Arguments(args, kwargs)
             def execute():
                 actual = arguments.apply(checklist.inspectable)
