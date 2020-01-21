@@ -34,6 +34,8 @@ def main(scopes, printer, follow_imports):
 
     PYCKY = pycky.glb.PYCKY
 
+    PYCKY.testing = True
+
     PYCKY.modules = _process_scopes(scopes)
 
     PYCKY.printer = _process_printer(printer)

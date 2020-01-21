@@ -1,6 +1,7 @@
 import abc
 
 from ..modifiers.deferrable import deferrable
+from ..glb import PYCKY
 
 
 class Checklist:
@@ -65,12 +66,16 @@ class Check(abc.ABC):
         """Given a check type, makes and returns a decorator out of it."""
         @deferrable
         def decorator(*args, **kwargs):
-            def inner(checklist_or_inspectable):
-                if isinstance(checklist_or_inspectable, Checklist):
-                    checklist = checklist_or_inspectable
-                else: # It's an inspectable
-                    checklist = Checklist(checklist_or_inspectable)
-                checklist.add_check(cls(*args, **kwargs))
-                return checklist
+            if PYCKY.testing:
+                def inner(checklist_or_inspectable):
+                    if isinstance(checklist_or_inspectable, Checklist):
+                        checklist = checklist_or_inspectable
+                    else: # It's an inspectable
+                        checklist = Checklist(checklist_or_inspectable)
+                    checklist.add_check(cls(*args, **kwargs))
+                    return checklist
+            else:
+                def inner(inspectable):
+                    return inspectable
             return inner
         return decorator

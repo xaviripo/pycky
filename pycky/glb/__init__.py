@@ -6,6 +6,9 @@ class Empty:
 # This global variable contains metadata and tests to be run later on.
 PYCKY = Empty()
 
+# Whether we are testing or not.
+PYCKY.testing = False
+
 # Contains all the tests to be run.
 PYCKY.tests = []
 
