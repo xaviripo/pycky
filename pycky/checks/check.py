@@ -1,7 +1,6 @@
-import abc
-
 from ..modifiers.deferrable import deferrable
 from ..glb import PYCKY
+from ..arguments import Arguments
 
 
 class Checklist:
@@ -11,13 +10,12 @@ class Checklist:
     itself, so it can be passed down the decorator pipeline.
     """
 
-    def __init__(self, inspectable, *checklist):
+    def __init__(self, inspectable):
         """
         :param inspected: the function to test
-        :param checklist: optional list of checks to do
         """
         self.inspectable = inspectable
-        self.checklist = list(checklist)
+        self.checklist = []
 
         # object of type Arguments to run the test with
         self.arguments = None
@@ -41,41 +39,36 @@ class Checklist:
                 actual=actual,
             )
 
+class Check:
 
-class Check(abc.ABC):
-    """A check is basically an assertion to make against a certain execution of
-    the inspected function."""
+    def __init__(self):
+        self.description = None
+        self.action = None
+        self.expected = None
 
-    @abc.abstractmethod
+    def __call__(self, checklist_or_inspectable):
+        if isinstance(checklist_or_inspectable, Checklist):
+            checklist = checklist_or_inspectable
+        else: # It's an inspectable
+            checklist = Checklist(checklist_or_inspectable)
+        checklist.add_check(self)
+        return checklist
+
     def do(self, actual):
-        """Does the actual check. Should return True if the check passes, False
-        otherwise."""
-        pass
+        return self.action(actual, self.expected)
 
-    @abc.abstractmethod
     def describe(self):
-        """Returns a phrase describing the check.
-        
-        The sentence is written in infinitive (e.g. "be greater than", "equal",
-        "have a length of", etc.)
-        """
-        pass
+        return self.description.format(self.expected)
 
-    @classmethod
-    def decorator(cls):
-        """Given a check type, makes and returns a decorator out of it."""
-        @deferrable
-        def decorator(*args, **kwargs):
-            if PYCKY.testing:
-                def inner(checklist_or_inspectable):
-                    if isinstance(checklist_or_inspectable, Checklist):
-                        checklist = checklist_or_inspectable
-                    else: # It's an inspectable
-                        checklist = Checklist(checklist_or_inspectable)
-                    checklist.add_check(cls(*args, **kwargs))
-                    return checklist
-            else:
-                def inner(inspectable):
-                    return inspectable
-            return inner
+    @staticmethod
+    def checkify(description):
+        def decorator(func):
+            @deferrable
+            def get_check(expected):
+                check = Check()
+                check.description = description
+                check.action = func
+                check.expected = expected
+                return check
+            return get_check
         return decorator

@@ -14,6 +14,12 @@ class Arguments():
             ("{}={}".format(key, repr(value)) for key, value in self.kwargs.items())
         ))
 
+    def __getitem__(self, key):
+        if type(key) is int:
+            return self.args[key]
+        else:
+            return self.kwargs[key]
+
     def apply(self, func):
         """Applies the arguments to the given function"""
         return func(*self.args, **self.kwargs)
