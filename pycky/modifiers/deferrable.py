@@ -1,9 +1,9 @@
 from types import LambdaType
 
 def deferrable(func):
-    """Given a function, adds to it a deferred version of itself.
+    """Given a function, returns a deferred version of itself.
 
-    This means, given func, which takes normal arguments, add to it func.defer
+    This means, given func, which takes normal arguments, return a function
     that takes maybe deferred arguments and passes them resolved to func.
 
     See _resolve()."""
