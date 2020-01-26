@@ -1,21 +1,15 @@
-from .modifiers.deferrable import deferrable
 from .arguments import Arguments
 # Import PYCKY global
 from .glb import PYCKY
-from .printers import BasicPrinter
+from .checks.check import Checklist
 
-
-@deferrable
 def case(*args, **kwargs):
-    """Decorates a given checklist in order to run its checks."""
-    # Only build build the arguments and such if we're testing.
+    # Only build the arguments and such if we're testing.
     if PYCKY.testing:
-        def inner(checklist):
-            # Save the checklist and the arguments to run it with to the global
-            checklist.arguments = Arguments(args, kwargs)
-            PYCKY.tests.append(checklist)
-            return checklist.inspectable
+        checklist = Checklist()
+        checklist.arguments = Arguments(args, kwargs)
+        return checklist
     else:
-        def inner(inspectable):
+        def identity(inspectable):
             return inspectable
-    return inner
+        return identity

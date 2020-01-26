@@ -57,7 +57,7 @@ def main(scopes, printer, follow_imports):
             inspected_name in PYCKY.modules[module_name]
 
         if test_this_module and test_this_inspectable:
-            checklist(PYCKY.printer)
+            checklist.execute(PYCKY.printer)
 
 def _process_scopes(scopes):
     """Given a list of scopes, returns a dictionary associating to each scope

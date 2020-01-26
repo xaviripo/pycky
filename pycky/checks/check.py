@@ -1,6 +1,4 @@
-from ..modifiers.deferrable import deferrable
 from ..glb import PYCKY
-from ..arguments import Arguments
 
 
 class Checklist:
@@ -10,10 +8,7 @@ class Checklist:
     itself, so it can be passed down the decorator pipeline.
     """
 
-    def __init__(self, inspectable):
-        """
-        :param inspected: the function to test
-        """
+    def __init__(self, inspectable=None):
         self.inspectable = inspectable
         self.checklist = []
 
@@ -21,54 +16,55 @@ class Checklist:
         self.arguments = None
 
     def add_check(self, check):
-        """Adds a new check to the checklist to make against a certain case.
-
-        The check is added at the beginning of the checklist so that tests are
-        run in the order they are written, given that decorators are applied
-        inside-out instead of top-bottom.
-        """
         self.checklist.insert(0, check)
 
-    def __call__(self, printer):
-        actual = self.arguments.apply(self.inspectable)
+    def generate_actual(self):
+        self.actual = self.inspectable(*self.arguments.args, **self.arguments.kwargs)
+
+    def execute(self, printer):
+        self.generate_actual()
         for check in self.checklist:
-            (printer.success if check.do(actual) else printer.failure)(
+            (printer.success if check.execute(self.actual) else printer.failure)(
                 inspected=self.inspectable,
                 arguments=self.arguments,
                 check=check,
-                actual=actual,
+                actual=self.actual,
             )
+
+    def __call__(self, other):
+        self.checklist = other.checklist
+        self.inspectable = other.inspectable
+        # TODO here we should actually add to global PYCKY.tests or sthng
+        PYCKY.tests.append(self)
+        return self.inspectable
+
 
 class Check:
 
-    def __init__(self):
-        self.description = None
-        self.action = None
-        self.expected = None
-
-    def __call__(self, checklist_or_inspectable):
-        if isinstance(checklist_or_inspectable, Checklist):
-            checklist = checklist_or_inspectable
-        else: # It's an inspectable
-            checklist = Checklist(checklist_or_inspectable)
+    def __call__(self, checklist):
+        if not isinstance(checklist, Checklist):
+            checklist = Checklist(checklist)
         checklist.add_check(self)
         return checklist
 
-    def do(self, actual):
-        return self.action(actual, self.expected)
+    def generate_expected(self):
+        pass
+
+    def execute(self, actual):
+        self.generate_expected()
+        return self.executor(actual, self.expected)
 
     def describe(self):
         return self.description.format(self.expected)
 
-    @staticmethod
-    def checkify(description):
-        def decorator(func):
-            @deferrable
-            def get_check(expected):
-                check = Check()
-                check.description = description
-                check.action = func
-                check.expected = expected
-                return check
-            return get_check
-        return decorator
+
+def checkify(description):
+    def set_executor(executor):
+        def set_expected(expected):
+            check = Check()
+            check.description = description
+            check.executor = executor
+            check.expected = expected
+            return check
+        return set_expected
+    return set_executor
