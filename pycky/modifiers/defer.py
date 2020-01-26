@@ -1,23 +1,28 @@
 from types import LambdaType, MethodType
 
-from ..checks.check import Check
+from ..checks.check import Check, Checklist
+from .modifier import Modifier
 
 
-def defer(check_or_checklist):
-    if isinstance(check_or_checklist, Check):
-        check = check_or_checklist
-        def generate_expected(self):
-            self.expected = self.expected()
-        check.generate_expected = MethodType(generate_expected, check)
-        return check
-    else: # It's a Checklist
-        checklist = check_or_checklist
-        def generate_actual(self):
-            self.actual = _defer_function(self.inspectable)(
-                *self.arguments.args, **self.arguments.kwargs
-            )
-        checklist.generate_actual = MethodType(generate_actual, checklist)
-        return checklist
+defer = Modifier()
+
+
+@defer.modifier(Check)
+def defer_check(check):
+    def generate_expected(self):
+        self.expected = self.expected()
+    check.generate_expected = MethodType(generate_expected, check)
+    return check
+
+
+@defer.modifier(Checklist)
+def defer_checklist(checklist):
+    def generate_actual(self):
+        self.actual = _defer_function(self.inspectable)(
+            *self.arguments.args, **self.arguments.kwargs
+        )
+    checklist.generate_actual = MethodType(generate_actual, checklist)
+    return checklist
 
 
 def _defer_function(func):
