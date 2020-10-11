@@ -1,26 +1,63 @@
 # Pycky
 
-## Introduction
+## About
 
-Pycky is a simple unit testing framework for Python.
+**Pycky** is a unit testing framework for Python.
+It is focused on being:
+
+- **Compact**. The tests are in the same files as the code, so you can easily check and change the behavior of your functions.
+- **Descriptive**. Pycky tests are as easy to read as they are to write.
+- **Flexible**. Choose to run some or all tests every time you run the code (just in case!), or run all the tests in a package, for a function, a case, or a check.
+- **Extensible**. Easily define reusable checks, modifiers, and printers to make writing new tests a breeze.
+
+
+## Installation
+
+First, clone this project:
+
+```sh
+git clone https://github.com/xaviripo/pycky
+```
+
+Then, install the package:
+
+```sh
+cd pycky
+pip install -e .
+```
+
+Now you can safely delete the cloned project.
 
 
 ## Quick start
 
-Just
+Suppose a file `example.py` with the following function:
 
 ```python
-from pycky.cases import case
-from pycky.checks import equals
-```
-
-and decorate your function like so:
-
-```python
-@case(2, 2)
-@equals(4)
 def add(a, b):
-    a + b
+    return a + b
 ```
 
-For more in-depth examples, see [`demo.py`](https://github.com/xaviripo/pycky/blob/master/demo.py).
+If you want to add a test to check that `add(2, 2)` equals `4`, you can change it to:
+
+```python
+from pycky import cases, checks
+
+@cases.case(2, 2)
+@checks.equals(4)
+def add(a, b):
+    return a + b
+```
+
+By running `pycky example` in the terminal, you get:
+
+```
+✔ example: Expected add(2, 2) to equal 4, correctly got 4.
+```
+
+The `case` decorator defines the arguments to pass to the tested function (in this case `add`), and the `equals` decorator supplies the expected output.
+
+
+## Documentation
+
+You can find the complete documentation for Pycky [here](docs/README.md).
