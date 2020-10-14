@@ -1,0 +1,1 @@
+from .pycky import main

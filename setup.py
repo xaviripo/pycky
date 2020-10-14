@@ -15,7 +15,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'pycky=pycky.bin.pycky:main',
+            'pycky=pycky.bin:main',
         ],
     },
     zip_safe=False
