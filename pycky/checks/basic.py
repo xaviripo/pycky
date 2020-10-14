@@ -6,7 +6,7 @@ def equals(actual, expected):
     return actual == expected
 
 
-@checkify("be grater than {}")
+@checkify("be greater than {}")
 def isGreaterThan(actual, minimum):
     return actual > minimum
 
