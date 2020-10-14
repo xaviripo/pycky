@@ -13,20 +13,11 @@ It is focused on being:
 
 ## Installation
 
-First, clone this project:
+You can install directly from this repository:
 
 ```sh
-git clone https://github.com/xaviripo/pycky
+pip install git+https://github.com/xaviripo/pycky.git
 ```
-
-Then, install the package:
-
-```sh
-cd pycky
-pip install -e .
-```
-
-Now you can safely delete the cloned project.
 
 
 ## Quick start
